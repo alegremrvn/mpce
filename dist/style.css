@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+}
+
+nav {
+  font-size: 32px;
+  border-bottom: 1px solid black;
+  padding: 5px;
+  height: 45px;
+}
+
+main {
+  padding: 10px;
+}
