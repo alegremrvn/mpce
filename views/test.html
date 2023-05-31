@@ -21,29 +21,39 @@
   </nav>
 
   <main>
-    <div id="testsDisplay"></div>
+    <h3 style="display: inline-block;" id="testName"></h3>
 
-    <a class="btn" href="/addtest">Add a test</a>
+    <a style="display: inline-block;" class="btn" href="/addtest">Add an item</a>
+
+    <div id="itemsDisplay"></div>
 
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
       integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
     <script>
       $(document).ready(function () {
+        let arr = window.location.href.split('/')
+        let testNameLc = arr[arr.length - 1]
+
         $.ajax({
           type: 'GET',
-          url: '/api/tests',
+          url: '/api/items/' + testNameLc,
           success: function (data) {
+            $('#testName').text(data.testName)
+            console.log(data)
+
             let result = ''
-            for (let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data['items'].length; i++) {
+              result += `<p>${data['items'][i].question}</p>`
 
-              result += `<a href="/test/${
-                data[i]
-                  .replace(/\s/g, "")
-                  .toLowerCase()
-              }"><h3>${data[i]}</h3></a>`
+              result += '<ul>'
+              for (let option of data['items'][i].options) {
+                result += `<li>${option}</li>`
+              }
+              result += '</ul><hr>'
             }
+            result += '<p>end</p>'
 
-            $('#testsDisplay').html(result)
+            $('#itemsDisplay').html(result)
           }
         })
       })

@@ -7,8 +7,33 @@ nav {
   border-bottom: 1px solid black;
   padding: 5px;
   height: 45px;
+  display: flex;
+  background-color: whitesmoke;
 }
 
 main {
-  padding: 10px;
+  padding: 15px 10px;
+}
+
+.menu {
+  width: 10%;
+  float: right;
+}
+
+.logo {
+  display: inline-block;
+  width: 90%;
+  color: black;
+}
+
+.btn {
+  text-decoration: none;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px;
+  color: black;
+}
+
+a {
+  color: black;
 }
