@@ -11,7 +11,7 @@
 <body>
   <nav>
     <div>
-      <a href="#">
+      <a href="/">
         <div class="logo">mp,ce</div>
       </a>
       <a href="#">
@@ -23,7 +23,7 @@
   <main>
     <h3 style="display: inline-block;" id="testName"></h3>
 
-    <a style="display: inline-block;" class="btn" href="/addtest">Add an item</a>
+    <a id="createItem" style="display: inline-block;" class="btn">Create an item</a>
 
     <div id="itemsDisplay"></div>
 
@@ -33,23 +33,47 @@
       $(document).ready(function () {
         let arr = window.location.href.split('/')
         let testNameLc = arr[arr.length - 1]
+        $('#createItem').attr('href', '/createitem/' + testNameLc)
 
         $.ajax({
           type: 'GET',
           url: '/api/items/' + testNameLc,
           success: function (data) {
             $('#testName').text(data.testName)
-            console.log(data)
 
             let result = ''
+            let itemNumber = 1
             for (let i = 0; i < data['items'].length; i++) {
               result += `<p>${data['items'][i].question}</p>`
 
-              result += '<ul>'
+              result += '<ol type="a">'
               for (let option of data['items'][i].options) {
                 result += `<li>${option}</li>`
               }
-              result += '</ul><hr>'
+              result += '</ol>'
+
+              let answer
+              switch (data['items'][i].answer) {
+                case 0:
+                  answer = 'a'
+                  break
+                case 1:
+                  answer = 'b'
+                  break
+                case 2:
+                  answer = 'c'
+                  break
+                case 3:
+                  answer = 'd'
+                  break
+              }
+              result += `<p>answer: ${answer}</p>`
+
+              result += `<a class="btn" href="/updateitem/${testNameLc}/${itemNumber}">Update</a>`
+              result += `<a class="btn" href="/deleteitem/${testNameLc}/${itemNumber}">Delete</a>`
+              result += '<hr>'
+
+              itemNumber++
             }
             result += '<p>end</p>'
 
