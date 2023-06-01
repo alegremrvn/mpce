@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>mpce</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="meta">
+  <link rel="stylesheet" href="/dist/style.css">
+</head>
+
+<body>
+  <nav>
+    <div>
+      <a href="/">
+        <div class="logo">mp,ce</div>
+      </a>
+      <a href="#">
+        <img class="menu" src="/dist/menuIcon.png">
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <h3 style="display: inline-block;" id="testName"></h3>
+
+    <form method="post">
+      <label for="question">question </label>
+      <textarea id="question" name="question"></textarea>
+      <br>
+
+      <label for="optA">a </label>
+      <input id="optA" name="optA" type="text">
+      <br>
+      <label for="optB">b </label>
+      <input id="optB" name="optB" type="text">
+      <br>
+      <label for="optC">c </label>
+      <input id="optC" name="optC" type="text">
+      <br>
+      <label for="optD">d </label>
+      <input id="optD" name="optD" type="text">
+      <br>
+
+      <label for="answer">answer </label>
+      <input id="answer" name="answer" type="text">
+      <br>
+
+      <input type="submit" value="Update Item">
+    </form>
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+      integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+    <script>
+      $(document).ready(function () {
+        $.ajax({
+          type: 'GET',
+          url: '/api/tests',
+          success: function (data) {
+            for (let originalName of data) {
+              name = JSON.parse(JSON.stringify(originalName))
+              name = name.replace(/\s/g, "").toLowerCase()
+              let arr = window.location.href.split('/')
+              let otherName = arr[arr.length - 2]
+
+              $('form').attr('action','/updateitem/' + otherName + '/' + arr[arr.length - 1])
+
+              if (name === otherName) {
+                $('#testName').text(originalName)
+
+                $.ajax({
+                  type: 'GET',
+                  url: '/api/items/' + name,
+                  success: function (data) {
+                    let item = data.items[arr[arr.length - 1] - 1]
+
+                    $('#question').text(item.question)
+                    $('#optA').attr('value', item.options[0])
+                    $('#optB').attr('value', item.options[1])
+                    $('#optC').attr('value', item.options[2])
+                    $('#optD').attr('value', item.options[3])
+
+                    let answer
+                    switch (item.answer) {
+                      case 0:
+                        answer = 'a'
+                        break
+                      case 1:
+                        answer = 'b'
+                        break
+                      case 2:
+                        answer = 'c'
+                        break
+                      case 3:
+                        answer = 'd'
+                        break
+                    }
+                    $('#answer').attr('value', answer)
+                  }
+                })
+              }
+            }
+          }
+        })
+
+        $('#testName').on('click', function(event) {
+          event.preventDefault()
+          let arr = window.location.href.split('/')
+
+          window.location.replace('/test/' + arr[arr.length - 2])
+        })
+      })
+    </script>
+  </main>
+</body>
+
+</html>
